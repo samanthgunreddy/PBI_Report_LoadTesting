@@ -1,5 +1,5 @@
-﻿################################################################################################################
-# Script to assess the load capacity for Power BI
+﻿################################################################################################################################################################################
+# Script to assess the load capacity for Power BI Reports
 #-------------------------------------------------------------------
 #
 # PRE-REQUISITES:
@@ -7,15 +7,22 @@
 # Access to PowerBI Service
 # Filter conditions need to be entered for report execution. 
 # Filters conditions include Table Name, Column Name, Starting value of the column and Max value of the column. 
-# The column selected should be a numeric where in an increment will be applied until max value is reached.
+# The column selected should be a numeric where in an increment will be applied.
+# Script requires "PBIESinglePageUOD_noADAL_event_filter_loop.html", "PBIReport.JSON" and "PBIToken.JSON" files provided in the package.
 # 
 #
 # WORKING:
 # --------
 # Aad access token will be used for authorized login to access workspace, reports and initiate execution. 
 # By default, Aad access token expires in 60 minutes and the html render stops with access error. 
-# Number of instances given by the user decides the number of browser sessions to be opened
-################################################################################################################
+# Number of instances given by the user decides the number of browser windows to be opened
+#
+#
+# Expected Result:
+# ----------------
+# Once the inputs are provided, script will save a folder in the current working directory for each report with copy of above mentioned fils configured with respective inputs.
+# Depending on the input whether to start executing the tests, script will open the browser windows as per the reports/instances configured.
+################################################################################################################################################################################
 
 #Variables declaration
 $destinationDir = ''
@@ -161,8 +168,7 @@ if ( $response -eq 'y' )
         $loopCounter = [int]$item.SessionsToRun
         while($loopCounter -gt 0)
         {       
-            #start chrome "--new-window --process-per-site-instance $($item.ConfiguredReportPath)"
-            start chrome.exe $($item.ConfiguredReportPath)
+            start chrome "--new-window $($item.ConfiguredReportPath)"            
             --$loopCounter
         }
     }
